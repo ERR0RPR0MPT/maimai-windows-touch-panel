@@ -1,0 +1,5 @@
+Pillow
+pyserial
+pyyaml
+pygame
+pywin32
