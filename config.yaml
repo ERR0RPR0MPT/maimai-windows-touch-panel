@@ -1,5 +1,5 @@
 # 编辑好的图片路径
-IMAGE_PATH: "./image/image_monitor_high.png"
+IMAGE_PATH: "./image/image_monitor.png"
 # 串口号
 COM_PORT: "COM33"
 # 比特率
