@@ -13,13 +13,15 @@
    放置到该图片圆形触摸区域的位置, 编辑好的图片放到脚本 `image` 目录下取名 `image_monitor.png`.
 5. 编辑 `config.yaml` 配置文件, 修改 `exp_image_dict` 配置, 将各区块对应的 RGB 通道颜色值改为刚P的图的对应区块颜色值(
    一般不用改默认就行)
-6. 执行 `pip install -r ./requirements.txt` 安装依赖
-7. 编辑 `config.yaml` 配置文件
-8. 下载一个 `VSPD` 虚拟串口工具, 将 `COM3` 和 `COM33` 建立转发
-9. 触摸屏连接到电脑, 先双击运行 `start.bat`, 再运行游戏, 脚本控制台输出 `已连接到游戏` 即可
-10. 进游戏调整判定A/B的延迟直到可用
-11. 打一把看看蹭不蹭星星/触控是否灵敏, 根据体验修改 `AREA_SCOPE` 变量
-12. 如果单点延迟低但滑动时延迟变高, 请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 false,
+6. 如果电脑上没有 Python 环境, 请先去 [官网](https://www.python.org/) 下载安装
+7. 双击运行 `install.bat` 安装依赖
+8. 编辑 `config.yaml` 配置文件, 按文件内说明修改多个配置
+9. 下载一个 `VSPD` 虚拟串口工具, 将 `COM3` 和 `COM33` 建立转发
+10. 触摸屏连接到电脑, 先双击运行 `start.bat`(如果有两块屏幕就在要运行游戏的那块屏幕上执行), 再运行游戏,
+    脚本控制台输出 `已连接到游戏` 即可
+11. 进游戏调整判定A/B的延迟直到可用
+12. 打一把看看蹭不蹭星星/触控是否灵敏, 根据体验修改 `AREA_SCOPE` 变量
+13. 如果单点延迟低但滑动时延迟变高, 请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 false,
     或者可以调小 `TOUCH_THREAD_SLEEP_DELAY` 的值(如果还是卡请提 issue 反馈)
 
 ## 命令列表
