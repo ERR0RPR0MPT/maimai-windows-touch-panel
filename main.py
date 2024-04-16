@@ -277,9 +277,6 @@ def getevent():
         # print("单次执行时间:", (time.perf_counter() - start_time) * 1e3, "毫秒")
 
 
-exp_image = Image.open(IMAGE_PATH)
-exp_image_width, exp_image_height = exp_image.size
-
 if __name__ == "__main__":
     os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
     import pygame
@@ -304,6 +301,9 @@ if __name__ == "__main__":
     else:
         print("未找到配置文件, 使用默认配置")
 
+    exp_image = Image.open(IMAGE_PATH)
+    exp_image_width, exp_image_height = exp_image.size
+    print(f"定位图路径: {IMAGE_PATH}")
     print(('已' if REVERSE_MONITOR else '未') + "开启屏幕反转")
     serial_manager = SerialManager()
     serial_manager.start()
