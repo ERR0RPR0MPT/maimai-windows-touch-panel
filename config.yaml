@@ -1,3 +1,5 @@
+# 是否开启调试模式
+DEBUG: false
 # 编辑好的图片路径
 IMAGE_PATH: "./image/image_monitor.png"
 # 串口号

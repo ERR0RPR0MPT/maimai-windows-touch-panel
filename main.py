@@ -12,6 +12,8 @@ import win32gui
 import threading
 import copy
 
+# 是否开启调试模式
+DEBUG = False
 # 编辑好的图片路径
 IMAGE_PATH = "./image/image_monitor.png"
 # 串口号
@@ -256,7 +258,7 @@ def getevent():
     clock = pygame.time.Clock()
     while True:
         # start_time = time.perf_counter()
-        clock.tick(120)
+        clock.tick(1200)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 break
@@ -274,6 +276,14 @@ def getevent():
                 elif event.type == pygame.FINGERUP:
                     touch_data.pop(str(touch_id))
                 convert(touch_data)
+                if not DEBUG:
+                    continue
+                if event.type == pygame.FINGERDOWN:
+                    print(f"Touch Down: ID={touch_id}, X={touch_x}, Y={touch_y}")
+                elif event.type == pygame.FINGERUP:
+                    print(f"Touch Up: ID={touch_id}, X={touch_x}, Y={touch_y}")
+                elif event.type == pygame.FINGERMOTION:
+                    print(f"Touch Motion: ID={touch_id}, X={touch_x}, Y={touch_y}")
         # print("单次执行时间:", (time.perf_counter() - start_time) * 1e3, "毫秒")
 
 
@@ -288,6 +298,7 @@ if __name__ == "__main__":
         print("使用配置文件:", yaml_file_path)
         with open(yaml_file_path, 'r', encoding='utf-8') as file:
             c = yaml.safe_load(file)
+        DEBUG = c["DEBUG"]
         IMAGE_PATH = c["IMAGE_PATH"]
         COM_PORT = c["COM_PORT"]
         COM_BAUDRATE = c["COM_BAUDRATE"]
@@ -304,6 +315,7 @@ if __name__ == "__main__":
     exp_image = Image.open(IMAGE_PATH)
     exp_image_width, exp_image_height = exp_image.size
     print(f"定位图路径: {IMAGE_PATH}")
+    print(f"触摸屏幕大小: {MONITOR_SIZE}")
     print(('已' if REVERSE_MONITOR else '未') + "开启屏幕反转")
     serial_manager = SerialManager()
     serial_manager.start()
