@@ -21,11 +21,11 @@ COM_PORT = "COM33"
 # 比特率
 COM_BAUDRATE = 9600
 # 检测区域的像素值范围
-AREA_SCOPE = 50
+AREA_SCOPE = 120
 # 检测区域圆上点的数量
 AREA_POINT_NUM = 8
 # 触摸屏幕大小 (单位:像素)
-MONITOR_SIZE = [1600, 2560]
+MONITOR_SIZE = [2160, 3840]
 # 是否开启屏幕反转
 REVERSE_MONITOR = False
 # touch_thread 是否启用sleep, 默认开启, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭
@@ -92,9 +92,10 @@ class SerialManager:
 
     def write_thread(self):
         while True:
-            # 延迟匹配波特率
-            time.sleep(0.0075)  # 9600
-            # time.sleep(0.002)  # 115200
+            # # 延迟匹配波特率
+            # time.sleep(0.0075)  # 9600
+            # # time.sleep(0.002)  # 115200
+            time.sleep(0.000001)  # 避免延迟过大
             if not self.startUp:
                 # print("当前没有启动")
                 continue
@@ -258,7 +259,7 @@ def getevent():
     clock = pygame.time.Clock()
     while True:
         # start_time = time.perf_counter()
-        clock.tick(1200)
+        clock.tick(6000)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 break
