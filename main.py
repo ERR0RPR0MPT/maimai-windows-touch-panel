@@ -9,8 +9,11 @@ import serial
 import win32api
 import win32con
 import win32gui
+import win32print
 import threading
 import copy
+
+from win32api import GetSystemMetrics
 
 # 是否开启调试模式
 DEBUG = False
@@ -24,8 +27,6 @@ COM_BAUDRATE = 9600
 AREA_SCOPE = 120
 # 检测区域圆上点的数量
 AREA_POINT_NUM = 8
-# 触摸屏幕大小 (单位:像素)
-MONITOR_SIZE = [2160, 3840]
 # 是否开启屏幕反转
 REVERSE_MONITOR = False
 # touch_thread 是否启用sleep, 默认开启, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭
@@ -238,6 +239,19 @@ def convert(touch_data):
     serial_manager.change_touch(copy_exp_list, touch_keys_list)
 
 
+def get_real_resolution():
+    hDC = win32gui.GetDC(0)
+    w = win32print.GetDeviceCaps(hDC, win32con.DESKTOPHORZRES)
+    h = win32print.GetDeviceCaps(hDC, win32con.DESKTOPVERTRES)
+    return w, h
+
+
+def get_screen_size():
+    w = GetSystemMetrics(0)
+    h = GetSystemMetrics(1)
+    return w, h
+
+
 def getevent():
     # 存储多点触控数据的列表
     touch_data = {}
@@ -266,25 +280,29 @@ def getevent():
             elif event.type == pygame.FINGERDOWN or event.type == pygame.FINGERUP or event.type == pygame.FINGERMOTION:
                 touch_id = event.finger_id
                 touch_x, touch_y = event.x * screen_width, event.y * screen_height
+                clac_touch_x = 0
+                clac_touch_y = 0
                 if event.type == pygame.FINGERDOWN or event.type == pygame.FINGERMOTION:
                     touch_data[str(touch_id)] = {}
                     if not REVERSE_MONITOR:
-                        touch_data[str(touch_id)]["x"] = touch_x
-                        touch_data[str(touch_id)]["y"] = touch_y
+                        clac_touch_x = int(touch_x * x_scale)
+                        clac_touch_y = int(touch_y * y_scale)
                     else:
-                        touch_data[str(touch_id)]["x"] = MONITOR_SIZE[0] - touch_x
-                        touch_data[str(touch_id)]["y"] = MONITOR_SIZE[1] - touch_y
+                        clac_touch_x = int((MONITOR_SIZE[0] - touch_x) * x_scale)
+                        clac_touch_y = int((MONITOR_SIZE[1] - touch_y) * y_scale)
+                    touch_data[str(touch_id)]["x"] = clac_touch_x
+                    touch_data[str(touch_id)]["y"] = clac_touch_y
                 elif event.type == pygame.FINGERUP:
                     touch_data.pop(str(touch_id))
                 convert(touch_data)
                 if not DEBUG:
                     continue
                 if event.type == pygame.FINGERDOWN:
-                    print(f"Touch Down: ID={touch_id}, X={touch_x}, Y={touch_y}")
+                    print(f"Touch Down: ID={touch_id}, X={clac_touch_x}, Y={clac_touch_y}")
                 elif event.type == pygame.FINGERUP:
-                    print(f"Touch Up: ID={touch_id}, X={touch_x}, Y={touch_y}")
+                    print(f"Touch Up: ID={touch_id}, X={clac_touch_x}, Y={clac_touch_y}")
                 elif event.type == pygame.FINGERMOTION:
-                    print(f"Touch Motion: ID={touch_id}, X={touch_x}, Y={touch_y}")
+                    print(f"Touch Motion: ID={touch_id}, X={clac_touch_x}, Y={clac_touch_y}")
         # print("单次执行时间:", (time.perf_counter() - start_time) * 1e3, "毫秒")
 
 
@@ -305,7 +323,6 @@ if __name__ == "__main__":
         COM_BAUDRATE = c["COM_BAUDRATE"]
         AREA_SCOPE = c["AREA_SCOPE"]
         AREA_POINT_NUM = c["AREA_POINT_NUM"]
-        MONITOR_SIZE = c["MONITOR_SIZE"]
         REVERSE_MONITOR = c["REVERSE_MONITOR"]
         TOUCH_THREAD_SLEEP_MODE = c["TOUCH_THREAD_SLEEP_MODE"]
         TOUCH_THREAD_SLEEP_DELAY = c["TOUCH_THREAD_SLEEP_DELAY"]
@@ -313,10 +330,16 @@ if __name__ == "__main__":
     else:
         print("未找到配置文件, 使用默认配置")
 
+    MONITOR_SIZE = get_screen_size()
     exp_image = Image.open(IMAGE_PATH)
     exp_image_width, exp_image_height = exp_image.size
+    x_scale = exp_image_width / MONITOR_SIZE[0]
+    y_scale = exp_image_height / MONITOR_SIZE[1]
     print(f"定位图路径: {IMAGE_PATH}")
+    print(f"定位图大小: [{exp_image_width}, {exp_image_height}]")
     print(f"触摸屏幕大小: {MONITOR_SIZE}")
+    print(f"X轴缩放比例: {x_scale}")
+    print(f"Y轴缩放比例: {y_scale}")
     print(('已' if REVERSE_MONITOR else '未') + "开启屏幕反转")
     serial_manager = SerialManager()
     serial_manager.start()
