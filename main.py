@@ -1,3 +1,4 @@
+from win32api import GetSystemMetrics
 from PIL import Image
 import math
 import os
@@ -12,8 +13,6 @@ import win32gui
 import win32print
 import threading
 import copy
-
-from win32api import GetSystemMetrics
 
 # 是否开启调试模式
 DEBUG = False
