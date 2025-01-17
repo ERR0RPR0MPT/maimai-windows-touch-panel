@@ -16,6 +16,10 @@ REVERSE_MONITOR: false
 TOUCH_THREAD_SLEEP_MODE: false
 # 每次 sleep 的延迟, 单位: 微秒, 默认 10 微秒
 TOUCH_THREAD_SLEEP_DELAY: 10
+# 自定义屏幕宽（0则为自动获取主屏幕的值）
+SCREEN_WIDTH: 0
+# 自定义屏幕高（0则为自动获取主屏幕的值）
+SCREEN_HEIGHT: 0
 
 # RGB 颜色值对应区块配置
 exp_image_dict:
