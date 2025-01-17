@@ -247,6 +247,8 @@ def get_real_resolution():
 def get_screen_size():
     w = GetSystemMetrics(0)
     h = GetSystemMetrics(1)
+    w =1080
+    h = 1920
     return w, h
 
 
