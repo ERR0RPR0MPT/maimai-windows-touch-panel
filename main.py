@@ -32,6 +32,10 @@ REVERSE_MONITOR = False
 TOUCH_THREAD_SLEEP_MODE = False
 # 每次 sleep 的延迟, 单位: 微秒, 默认 10 微秒
 TOUCH_THREAD_SLEEP_DELAY = 10
+# 自定义屏幕宽（0则为自动获取主屏幕的值）
+SCREEN_WIDTH: 0
+# 自定义屏幕高（0则为自动获取主屏幕的值）
+SCREEN_HEIGHT: 0
 # 窗口图标路径
 icon_path = './image/favicon.ico'
 
@@ -247,6 +251,11 @@ def get_real_resolution():
 def get_screen_size():
     w = GetSystemMetrics(0)
     h = GetSystemMetrics(1)
+    if(SCREEN_HEIGHT != 0):
+        w = SCREEN_WIDTH
+    if(SCREEN_WIDTH != 0):
+        h = SCREEN_HEIGHT
+   
     return w, h
 
 
@@ -325,6 +334,8 @@ if __name__ == "__main__":
         TOUCH_THREAD_SLEEP_MODE = c["TOUCH_THREAD_SLEEP_MODE"]
         TOUCH_THREAD_SLEEP_DELAY = c["TOUCH_THREAD_SLEEP_DELAY"]
         exp_image_dict = c["exp_image_dict"]
+        SCREEN_WIDTH = c["SCREEN_WIDTH"]
+        SCREEN_HEIGHT = c["SCREEN_HEIGHT"]
     else:
         print("未找到配置文件, 使用默认配置")
 
